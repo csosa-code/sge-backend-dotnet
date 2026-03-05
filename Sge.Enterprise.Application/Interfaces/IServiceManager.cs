@@ -4,4 +4,5 @@ public interface IServiceManager
 {
     IEmployeeService EmployeeService { get; }
     IAreaService AreaService { get; }
+    IDashboardService DashboardService { get; }
 }

@@ -36,7 +36,10 @@ public class AreaRepository : IAreaRepository
             .AnyAsync(a => a.Name.ToLower() == name.ToLower());
     }
 
-    
+    public async Task<int> CountAsync()
+    {
+        return await _context.Areas.CountAsync();
+    }
 
 
 }

@@ -9,4 +9,5 @@ public interface IAreaRepository
     Task AddAsync(Area area);
     Task UpdateAsync(Area area);
     Task<bool> ExistsByNameAsync(string name);
+    Task<int> CountAsync();
 }

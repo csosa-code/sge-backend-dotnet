@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Sge.Enterprise.Application.Dtos;
 using Sge.Enterprise.Application.Interfaces;
+using Sge.Enterprise.Domain.Pagination;
 
 namespace Sge.Enterprise.Api.Controllers;
 
@@ -14,9 +15,12 @@ public class EmployeesController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get([FromQuery] QueryParams queryParams)
     {
-        var employees = await _serviceManager.EmployeeService.GetAllAsync();
+        Console.WriteLine($"Page: {queryParams.Page}");
+Console.WriteLine($"PageSize: {queryParams.PageSize}");
+Console.WriteLine($"Sort: {queryParams.SortActive}");
+        var employees = await _serviceManager.EmployeeService.GetAllAsync(queryParams);
         return Ok(employees); 
     }
 
@@ -39,5 +43,19 @@ public class EmployeesController : BaseApiController
     {
         var employee = await _serviceManager.EmployeeService.UpdateAsync(id,data);
         return Ok(employee);
+    }
+
+    [HttpPut("{id}/activate")]
+    public async Task<IActionResult> Activate(int id)
+    {
+        await _serviceManager.EmployeeService.ActivateAsync(id);
+        return Ok();
+    }
+
+    [HttpPut("{id}/deactivate")]
+    public async Task<IActionResult> Deactivate(int id)
+    {
+        await _serviceManager.EmployeeService.DeactivateAsync(id);
+        return Ok();
     }
 }

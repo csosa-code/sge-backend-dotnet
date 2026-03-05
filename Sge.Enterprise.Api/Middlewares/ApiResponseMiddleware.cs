@@ -8,6 +8,11 @@ namespace Sge.Enterprise.Api.Middlewares
     {
         private readonly RequestDelegate _next;
 
+        private static readonly JsonSerializerOptions _jsonOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+
         public ApiResponseMiddleware(RequestDelegate next)
         {
             _next = next;
@@ -41,7 +46,7 @@ namespace Sge.Enterprise.Api.Middlewares
                     status: context.Response.StatusCode is >= 200 and < 300,
                     message: GetDefaultMessage(context.Response.StatusCode));
 
-                var wrapperJson = JsonSerializer.Serialize(emptyResponse);
+                var wrapperJson = JsonSerializer.Serialize(emptyResponse, _jsonOptions);
 
                 context.Response.ContentType = "application/json; charset=utf-8";
                 context.Response.ContentLength = Encoding.UTF8.GetByteCount(wrapperJson);
@@ -77,7 +82,7 @@ namespace Sge.Enterprise.Api.Middlewares
                 status: true,
                 message: GetDefaultMessage(context.Response.StatusCode));
 
-            var json = JsonSerializer.Serialize(apiResponse);
+            var json = JsonSerializer.Serialize(apiResponse, _jsonOptions);
 
             context.Response.ContentType = "application/json; charset=utf-8";
             context.Response.ContentLength = Encoding.UTF8.GetByteCount(json);
@@ -90,11 +95,11 @@ namespace Sge.Enterprise.Api.Middlewares
         {
             return statusCode switch
             {
-                StatusCodes.Status200OK                  => "Proceso exitoso",
-                StatusCodes.Status201Created             => "Recurso creado exitosamente",
-                StatusCodes.Status202Accepted            => "Solicitud aceptada para procesamiento",
-                StatusCodes.Status204NoContent           => "Sin contenido",
-                _                                        => "Proceso finalizado"
+                StatusCodes.Status200OK => "Proceso exitoso",
+                StatusCodes.Status201Created => "Recurso creado exitosamente",
+                StatusCodes.Status202Accepted => "Solicitud aceptada para procesamiento",
+                StatusCodes.Status204NoContent => "Sin contenido",
+                _ => "Proceso finalizado"
             };
         }
     }

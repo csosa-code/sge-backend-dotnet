@@ -6,6 +6,11 @@ namespace Sge.Enterprise.Api.Middlewares
 {
     public class ExceptionHandlingMiddleware
     {
+
+        private static readonly JsonSerializerOptions _jsonOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
@@ -44,10 +49,10 @@ namespace Sge.Enterprise.Api.Middlewares
             var response = new ApiResponse(
                 data: null,
                 status: false,
-                message: exception.Message // 👈 aquí va tu "No encontró empleado"
+                message: exception.Message 
             );
 
-            var json = JsonSerializer.Serialize(response);
+            var json = JsonSerializer.Serialize(response, _jsonOptions);
             await httpContext.Response.WriteAsync(json);
         }
     }

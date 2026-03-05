@@ -43,8 +43,6 @@ public class AreaService : IAreaService
 
     public async Task<AreaDto> UpdateAsync(int areaId, AreaUpdateDto data)
     {
-        try
-        {
             var curArea = await GetAreaAsync(areaId);
 
             _mapper.Map(data, curArea);
@@ -52,11 +50,6 @@ public class AreaService : IAreaService
             await _unitOfWork.Areas.UpdateAsync(curArea);
             await _unitOfWork.CompleteAsync();
             return _mapper.Map<AreaDto>(curArea);
-        }
-        catch (Exception)
-        {
-            throw;
-        }
     }
 
     private async Task<Area> GetAreaAsync(int areaId)

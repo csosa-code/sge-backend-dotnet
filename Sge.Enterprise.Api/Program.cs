@@ -22,6 +22,18 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddAutoMapper(typeof(ApplicationProfile).Assembly);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular",
+        policy =>
+        {
+            policy
+                .WithOrigins("http://localhost:4200")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -32,6 +44,7 @@ var app = builder.Build();
 // }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowAngular");
 app.UseMiddleware<ApiResponseMiddleware>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.MapControllers();

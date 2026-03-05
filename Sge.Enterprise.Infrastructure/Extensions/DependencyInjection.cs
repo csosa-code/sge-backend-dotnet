@@ -35,6 +35,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IEmployeeService, EmployeeService>();
         services.AddScoped<IAreaService, AreaService>();
+        services.AddScoped<IDashboardService, DashboardService>();
         return services;
     }
 }

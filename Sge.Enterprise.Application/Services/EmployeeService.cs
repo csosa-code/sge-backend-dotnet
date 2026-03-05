@@ -7,6 +7,7 @@ using Sge.Enterprise.Application.Dtos;
 using Sge.Enterprise.Application.Settings;
 using Microsoft.Extensions.Options;
 using Sge.Enterprise.Application.Exceptions;
+using Sge.Enterprise.Domain.Pagination;
 
 
 namespace Sge.Enterprise.Application.Services;
@@ -23,8 +24,22 @@ public class EmployeeService : IEmployeeService
         _employeeSettings = employeeSettings.Value;
     }
 
-    public async Task<IReadOnlyList<EmployeeDto>> GetAllAsync()
+    public async Task<object> GetAllAsync(QueryParams? queryParams = null)
+
     {
+        if (queryParams?.Page.HasValue == true && queryParams.PageSize.HasValue)
+        {
+            var pagination = await _unitOfWork.Employees.GetAllWithPaginationAsync(queryParams);
+
+            return new PaginationResult<EmployeeDto>
+            {
+                Data = _mapper.Map<IEnumerable<EmployeeDto>>(pagination.Data),
+                CurrentPage = pagination.CurrentPage,
+                TotalItems = pagination.TotalItems,
+                TotalPages = pagination.TotalPages
+            };
+        }
+
         var employees = await _unitOfWork.Employees.GetAllAsync();
         return _mapper.Map<IReadOnlyList<EmployeeDto>>(employees);
     }
@@ -40,7 +55,7 @@ public class EmployeeService : IEmployeeService
         ValidateMinSalary(data.Salary);
         await ValidateArea(data.AreaId);
         await ValidateDocumentNumberAsync(data.DocumentNumber);
-        
+
         var employee = _mapper.Map<Employee>(data);
 
         await _unitOfWork.Employees.AddAsync(employee);
@@ -78,7 +93,6 @@ public class EmployeeService : IEmployeeService
             throw new BadRequestException("El empleado ya está activo");
 
         employee.StatusId = 1;
-        await _unitOfWork.Employees.UpdateAsync(employee);
         await _unitOfWork.CompleteAsync();
     }
 
@@ -90,7 +104,6 @@ public class EmployeeService : IEmployeeService
             throw new BadRequestException("El empleado ya está inactivo");
 
         employee.StatusId = 0;
-        await _unitOfWork.Employees.UpdateAsync(employee);
         await _unitOfWork.CompleteAsync();
     }
 
