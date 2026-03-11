@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sge.Enterprise.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using Sge.Enterprise.Infrastructure.Persistence;
 namespace Sge.Enterprise.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(SgeDbContext))]
-    partial class SgeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260310214953_AddUserTable")]
+    partial class AddUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

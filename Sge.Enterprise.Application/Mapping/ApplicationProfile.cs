@@ -16,5 +16,8 @@ public class ApplicationProfile : Profile
         CreateMap<Area, AreaDto>();
         CreateMap<AreaAddDto, Area>();
         CreateMap<AreaUpdateDto, Area>();
+
+        CreateMap<RegisterDto, User>()
+            .ReverseMap();
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sge.Enterprise.Application.Interfaces;
+using Sge.Enterprise.Application.Security;
 using Sge.Enterprise.Application.Services;
 using Sge.Enterprise.Domain.Interfaces;
 using Sge.Enterprise.Infrastructure.Persistence;
@@ -28,6 +29,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         services.AddScoped<IAreaRepository, AreaRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         return services;
     }
 
@@ -36,6 +38,8 @@ public static class DependencyInjection
         services.AddScoped<IEmployeeService, EmployeeService>();
         services.AddScoped<IAreaService, AreaService>();
         services.AddScoped<IDashboardService, DashboardService>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IJwtService, JwtService>();
         return services;
     }
 }

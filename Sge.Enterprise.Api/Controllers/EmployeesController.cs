@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using Sge.Enterprise.Application.Dtos;
 using Sge.Enterprise.Application.Interfaces;
 using Sge.Enterprise.Domain.Pagination;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Sge.Enterprise.Api.Controllers;
 
+[Authorize]
 public class EmployeesController : BaseApiController
 {
     private readonly IServiceManager _serviceManager;
@@ -17,9 +19,7 @@ public class EmployeesController : BaseApiController
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery] QueryParams queryParams)
     {
-        Console.WriteLine($"Page: {queryParams.Page}");
-Console.WriteLine($"PageSize: {queryParams.PageSize}");
-Console.WriteLine($"Sort: {queryParams.SortActive}");
+
         var employees = await _serviceManager.EmployeeService.GetAllAsync(queryParams);
         return Ok(employees); 
     }

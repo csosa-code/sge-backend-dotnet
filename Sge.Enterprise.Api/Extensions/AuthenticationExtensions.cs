@@ -11,9 +11,16 @@ namespace Sge.Enterprise.Api.Extensions
             this IServiceCollection services,
             IConfiguration configuration)
         {
+            services.Configure<JwtSettings>(
+                configuration.GetSection("JwtSettings")
+            );
+
             var jwtSettings = configuration
                 .GetSection("JwtSettings")
                 .Get<JwtSettings>();
+
+            if (jwtSettings == null || string.IsNullOrEmpty(jwtSettings.Secret))
+                throw new Exception("JwtSettings configuration is missing in appsettings.json");
 
             var key = Encoding.UTF8.GetBytes(jwtSettings!.Secret);
 

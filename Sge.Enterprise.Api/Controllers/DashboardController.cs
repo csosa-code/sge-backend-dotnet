@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Sge.Enterprise.Application.Dtos;
 using Sge.Enterprise.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Sge.Enterprise.Api.Controllers;
 
+[Authorize]
 public class DashboardController : BaseApiController
 {
     private readonly IServiceManager _serviceManager;

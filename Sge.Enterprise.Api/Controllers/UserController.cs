@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Sge.Enterprise.Application.Dtos;
 using Sge.Enterprise.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Sge.Enterprise.Api.Controllers;
-
+[Authorize]
 public class UserController : BaseApiController
 {
     private readonly IServiceManager _serviceManager;
@@ -13,6 +14,7 @@ public class UserController : BaseApiController
         _serviceManager = serviceManager;
     }
 
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto data)
     {
@@ -20,6 +22,7 @@ public class UserController : BaseApiController
         return Ok(authResponse);
     }
 
+    [AllowAnonymous]
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto data)
     {

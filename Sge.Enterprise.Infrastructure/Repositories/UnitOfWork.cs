@@ -9,16 +9,18 @@ public class UnitOfWork : IUnitOfWork
 
     public IEmployeeRepository Employees { get; }
     public IAreaRepository Areas { get; }
-
+    public IUserRepository Users { get; }
     public UnitOfWork(
         SgeDbContext context,
         IEmployeeRepository employeeRepository,
-        IAreaRepository areaRepository
+        IAreaRepository areaRepository,
+        IUserRepository userRepository
         )
     {
         _context = context;
         Employees = employeeRepository;
         Areas = areaRepository;
+        Users = userRepository;
     }
 
     public async Task<int> CompleteAsync()

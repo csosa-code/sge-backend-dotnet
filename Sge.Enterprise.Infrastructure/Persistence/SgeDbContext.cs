@@ -36,22 +36,12 @@ public class SgeDbContext : DbContext
 
     public DbSet<Employee> Employees => Set<Employee>();
     public DbSet<Area> Areas => Set<Area>();
-
+    public DbSet<User> Users => Set<User>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Employee>()
-            .Property(e => e.Salary)
-            .HasPrecision(18, 2);
-
-        modelBuilder.Entity<Employee>()
-            .HasIndex(e => e.DocumentNumber)
-            .IsUnique();
-
-        modelBuilder.Entity<Area>()
-            .HasIndex(a => a.Name)
-            .IsUnique();
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(SgeDbContext).Assembly);
+        base.OnModelCreating(modelBuilder);  
     }
 
 

@@ -52,12 +52,13 @@ public class UserService : IUserService
         var userExists = await _unitOfWork.Users.GetByUsernameAsync(data.Email);
 
         if (userExists != null)
-            throw new BadRequestException("El usuario ya existe");
+            throw new BadRequestException("El correo electrónico ya está en uso");
 
 
         var passwordResult = PasswordExtensions.HashPassword(data.Password);    
 
         var user = _mapper.Map<User>(data);
+        user.Username = user.Email;
         user.PasswordHash = passwordResult.PasswordHash;
         user.PasswordSalt = passwordResult.PasswordSalt;
 

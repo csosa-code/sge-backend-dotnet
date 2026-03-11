@@ -3,6 +3,7 @@ using Sge.Enterprise.Api.Middlewares;
 using Sge.Enterprise.Application.Mapping;
 using Sge.Enterprise.Infrastructure.Extensions;
 using Sge.Enterprise.Application.Settings;
+using Sge.Enterprise.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,28 +12,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-// builder.Services.AddTransient<ApiResponseMiddleware>();
-// builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 builder.Services.Configure<EmployeeSettings>(builder.Configuration.GetSection("EmployeeSettings"));
-
-
 builder.Services.AddInfrastructure(builder.Configuration);
-
 builder.Services.AddAutoMapper(typeof(ApplicationProfile).Assembly);
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAngular",
-        policy =>
-        {
-            policy
-                .WithOrigins("http://localhost:4200")
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        });
-});
+builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddCorsPolicy(builder.Configuration);
 
 var app = builder.Build();
 
@@ -47,6 +33,8 @@ app.UseHttpsRedirection();
 app.UseCors("AllowAngular");
 app.UseMiddleware<ApiResponseMiddleware>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 
